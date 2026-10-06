@@ -1,0 +1,10 @@
+Configuration/source area for an Android application connected to Firebase
+❌ Not currently
+
+Ambulance Driver
+       ↓
+Android App
+       ↓
+Firebase
+       ↓
+Dispatcher Web Dashboard

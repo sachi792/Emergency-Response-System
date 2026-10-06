@@ -1,0 +1,12 @@
+Firebase Cloud Functions — backend code that runs on Firebase's servers
+⚠️ Not much / not currently
+
+Emergency created
+       ↓
+Firebase
+       ↓
+Cloud Function
+       ↓
+Find nearest available ambulance
+       ↓
+Send notification

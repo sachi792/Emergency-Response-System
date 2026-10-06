@@ -1,0 +1,11 @@
+Documentation related to the Firebase/project configuration
+❌ Not part of the actual app UI
+
+Emergency Ambulance Project/
+├── web/
+├── functions/
+├── android/
+├── docs/
+│   ├── system-design.md
+│   ├── database-design.md
+│   └── API-notes.md
