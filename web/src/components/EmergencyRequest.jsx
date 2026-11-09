@@ -49,6 +49,17 @@ function EmergencyRequest() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [coordinates, setCoordinates] = useState(null);
+  const [locationError, setLocationError] = useState("");
+
+  const captureLocation = () => {
+    if (!navigator.geolocation) { setLocationError("Location is not supported by this device."); return; }
+    setLocationError("");
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      setCoordinates({ latitude: coords.latitude, longitude: coords.longitude });
+      setFormData((current) => ({ ...current, address: `${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}` }));
+    }, () => setLocationError("Location access failed. Enter the address manually."), { enableHighAccuracy: true, timeout: 12000 });
+  };
 
   // ==========================================
   // LISTEN TO CURRENT EMERGENCY
@@ -145,6 +156,7 @@ function EmergencyRequest() {
         address: formData.address,
         priority: formData.priority,
         description: formData.description,
+        ...(Number.isFinite(coordinates?.latitude) && Number.isFinite(coordinates?.longitude) ? coordinates : {}),
 
         status: "PENDING",
 
@@ -397,6 +409,12 @@ function EmergencyRequest() {
                 placeholder="Enter emergency location"
                 required
               />
+              <button type="button" onClick={captureLocation} className="er-location">◎ Use my current location</button>
+              {locationError && <small role="alert">{locationError}</small>}
+              <div className="er-coordinates">
+                <label>Latitude<input aria-label="Latitude" type="number" step="any" value={coordinates?.latitude ?? ""} placeholder="Latitude" onChange={(e) => setCoordinates((current) => ({ ...(current || {}), latitude: e.target.value === "" ? undefined : Number(e.target.value) }))} /></label>
+                <label>Longitude<input aria-label="Longitude" type="number" step="any" value={coordinates?.longitude ?? ""} placeholder="Longitude" onChange={(e) => setCoordinates((current) => ({ ...(current || {}), longitude: e.target.value === "" ? undefined : Number(e.target.value) }))} /></label>
+              </div>
             </div>
 
             {/* 6. Priority */}

@@ -30,6 +30,28 @@
   }
 }
 
+.live-map-card { overflow: hidden; border: 1px solid #2f3644; border-radius: 14px; background: #161b22; color: #e8eaed; }
+.live-map-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; }
+.live-map-heading strong, .live-map-heading span { display: block; }
+.live-map-heading span { color: #9aa4b5; font-size: 12px; }
+.map-legend { display: flex; gap: 12px; }
+.map-legend span { color: #dce3ef; }
+.live-map-canvas { position: relative; overflow: hidden; background: #e5e3df; }
+.map-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.map-pin { position: absolute; z-index: 2; transform: translate(-50%, -50%); display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 8px #0008; font-weight: 900; }
+.map-pin.emergency { color: white; background: #dc2626; }
+.map-pin.ambulance { background: #fff; font-size: 16px; }
+.map-attribution { position: absolute; right: 4px; bottom: 2px; z-index: 3; padding: 1px 4px; background: #ffffffd9; color: #333; font: 11px Arial, sans-serif; }
+.map-route-error { position: absolute; top: 8px; left: 8px; background: #fff; padding: 5px 8px; border-radius: 5px; font: 12px Arial, sans-serif; }
+.map-route-info { position: absolute; top: 8px; left: 8px; background: #fff; padding: 6px 9px; border-radius: 5px; color: #16324f; box-shadow: 0 1px 5px #0003; font: 600 12px Arial, sans-serif; }
+.map-empty { display: grid; place-items: center; min-height: 170px; padding: 20px; color: #9aa4b5; text-align: center; }
+.er-location { padding: 8px 10px; border: 1px solid #475569; border-radius: 7px; background: #202938; color: #e8eaed; cursor: pointer; }
+.er-coordinates { display: flex; gap: 10px; }
+.er-coordinates label { flex: 1; color: #9aa4b5; font-size: 12px; }
+.er-coordinates input { box-sizing: border-box; width: 100%; margin-top: 3px; padding: 8px; border: 1px solid #475569; border-radius: 6px; background: #202938; color: #e8eaed; }
+#root { width: 100%; max-width: 100%; }
+@media (max-width: 640px) { .live-map-heading { align-items: flex-start; flex-direction: column; } .map-legend { flex-wrap: wrap; } }
+
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;

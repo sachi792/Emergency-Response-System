@@ -66,6 +66,24 @@ function AmbulanceManagement() {
     return () => unsubscribe();
   }, [ambulanceId]);
 
+  useEffect(() => {
+    if (!ambulanceId || !navigator.geolocation) return undefined;
+    let lastUpdate = 0;
+    const watchId = navigator.geolocation.watchPosition(({ coords }) => {
+      const now = Date.now();
+      if (now - lastUpdate < 10000) return;
+      lastUpdate = now;
+      updateDoc(doc(db, "ambulances", ambulanceId), {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+        locationUpdatedAt: serverTimestamp(),
+      }).catch((error) => console.warn("Unable to update ambulance location:", error));
+    }, (error) => console.warn("Driver location unavailable:", error.message), {
+      enableHighAccuracy: true, maximumAge: 5000, timeout: 15000,
+    });
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [ambulanceId]);
+
   // ==========================================
   // LISTEN TO ASSIGNED EMERGENCY
   // ==========================================

@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../firebase";
+import LiveMap from "./LiveMap";
 
 // Colour theme for each emergency status (same as the caller's tracking page)
 const STATUS_THEME = {
@@ -56,7 +57,7 @@ function DispatcherDashboard() {
   useEffect(() => {
     const q = query(
       collection(db, "emergency_requests"),
-      where("status", "in", ["ASSIGNED", "ON_THE_WAY", "ARRIVED"])
+      where("status", "in", ["ASSIGNED", "ON_THE_WAY", "ARRIVED", "PICKED_UP", "GOING_TO_HOSPITAL", "AT_HOSPITAL"])
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -75,10 +76,7 @@ function DispatcherDashboard() {
   // Listen for available ambulances
   // --------------------------------------------------
   useEffect(() => {
-    const q = query(
-      collection(db, "ambulances"),
-      where("status", "==", "AVAILABLE")
-    );
+    const q = collection(db, "ambulances");
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const ambulanceList = snapshot.docs.map((doc) => ({
@@ -182,6 +180,7 @@ function DispatcherDashboard() {
       <style>{css}</style>
 
       <div style={styles.dashboard}>
+        <LiveMap emergencies={[...pendingEmergencies, ...activeEmergencies]} ambulances={ambulances} />
         {/* Header */}
         <div style={styles.header}>
           <h1 style={styles.title}>🚨 Dispatcher Dashboard</h1>
@@ -275,7 +274,7 @@ function DispatcherDashboard() {
                     >
                       <option value="">-- Select Available Ambulance --</option>
 
-                      {ambulances.map((ambulance) => (
+                      {ambulances.filter((ambulance) => ambulance.status === "AVAILABLE").map((ambulance) => (
                         <option key={ambulance.id} value={ambulance.id}>
                           {ambulance.vehicleNumber} - {ambulance.driverName}
                         </option>
@@ -464,14 +463,14 @@ function DispatcherDashboard() {
         <section>
           <h2 style={styles.sectionTitle}>
             🚑 Available Ambulances{" "}
-            <span style={styles.count}>{ambulances.length}</span>
+            <span style={styles.count}>{ambulances.filter((unit) => unit.status === "AVAILABLE").length}</span>
           </h2>
 
-          {ambulances.length === 0 ? (
+          {ambulances.filter((unit) => unit.status === "AVAILABLE").length === 0 ? (
             <p style={styles.empty}>No ambulances currently available.</p>
           ) : (
             <div style={styles.grid}>
-              {ambulances.map((ambulance) => (
+              {ambulances.filter((unit) => unit.status === "AVAILABLE").map((ambulance) => (
                 <div key={ambulance.id} style={styles.ambulanceCard}>
                   <div style={styles.cardTop}>
                     <h3 style={styles.cardTitle}>
